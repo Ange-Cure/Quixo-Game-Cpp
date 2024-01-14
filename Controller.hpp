@@ -1,17 +1,25 @@
 #pragma once
 #include "Model.hpp"
+#include <SFML/Graphics.hpp>
 
 class View;
+class ViewMainMenu;
 
 class Controller
 {
 private:
     Model model;
-    View* view;
+    sf::RenderWindow* window;
 
 public:
-    Controller(View*);
+    Controller();
+    std::unique_ptr<GameState>& getCurrentState();
+    std::vector<std::vector<int>> getBoard();
     void run();
-    std::vector<std::vector<int>> click(int, int);
+    void changeViewPlayerVsPlayer();
+    void changeViewPlayerVsAI();
+    void changeViewChooseAI();
+    void click(int, int);
+    void resetGame();
 };
 

@@ -7,7 +7,6 @@ class View
 private:
     Controller* controller;
 
-    sf::RenderWindow window;
     int spriteSize = 120;
     int x_offset = 25;
     int y_offset = 25;
@@ -21,6 +20,10 @@ private:
     sf::Texture textureEmptyPlayable;
     sf::Texture textureRondPlayable;
     sf::Texture textureCroixPlayable;
+    sf::Texture textureBack;
+    sf::Texture textureRondVictory;
+    sf::Texture textureCroixVictory;
+    sf::Texture texturePlayAgain;
 
 
     sf::Sprite spriteEmpty;
@@ -29,9 +32,13 @@ private:
     sf::Sprite spriteEmptyPlayable;
     sf::Sprite spriteRondPlayable;
     sf::Sprite spriteCroixPlayable;
+    sf::Sprite spriteBack;
+    sf::Sprite spriteCroixVictory;
+    sf::Sprite spriteRondVictory;
+    sf::Sprite spritePlayAgain;
 
 public:
     View(Controller*);
-    void display(std::vector<std::vector<int>>, int, int);
+    void display(sf::RenderWindow* window);
 };
 

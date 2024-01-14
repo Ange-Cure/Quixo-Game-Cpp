@@ -1,10 +1,11 @@
 #include "Model.hpp"
-#include <iostream>
+#include "Player1SelectPieceState.hpp"
+#include "EndGamePlayer1State.hpp"
+#include "EndGamePlayer2State.hpp"
 
 
-Model::Model() {
+Model::Model() : currentState(std::make_unique<Player1SelectPieceState>()) {
     board = std::vector<std::vector<int>>(5, std::vector<int>(5, 0));
-    currentPlayer = 1;
     selectedPieceX = -1;
     selectedPieceY = -1;
 }
@@ -13,16 +14,20 @@ std::vector<std::vector<int>> Model::getBoard() {
     return board;
 }
 
-int Model::getCurrentPlayer() {
-    return currentPlayer;
+std::vector<std::vector<int>>& Model::getBoardRef() {
+    return board;
 }
 
-void Model::switchPlayer() {
-    if (currentPlayer == 2) {
-        currentPlayer = 1;
-    } else {
-        currentPlayer = 2;
-    }
+int Model::getSelectedPieceX() {
+    return selectedPieceX;
+}
+
+int Model::getSelectedPieceY() {
+    return selectedPieceY;
+}
+
+GameState& Model::getCurrentState() {
+    return *currentState;
 }
 
 void Model::switchPiece(int xA, int yA, int xB, int yB) {
@@ -71,22 +76,22 @@ void Model::setDeplacementValide(int x, int y) {
 }
 
 void Model::unsetDeplacementValide() {
-    board[selectedPieceX][0] = board[selectedPieceX][0] - 3;
-    board[selectedPieceX][4] = board[selectedPieceX][4] - 3;
-    board[0][selectedPieceY] = board[0][selectedPieceY] - 3;
-    board[4][selectedPieceY] = board[4][selectedPieceY] - 3;
+    if (selectedPieceY != 0) board[selectedPieceX][0] = board[selectedPieceX][0] - 3;
+    if (selectedPieceY != 4) board[selectedPieceX][4] = board[selectedPieceX][4] - 3;
+    if (selectedPieceX != 0) board[0][selectedPieceY] = board[0][selectedPieceY] - 3;
+    if (selectedPieceX != 4) board[4][selectedPieceY] = board[4][selectedPieceY] - 3;
 }
 
-bool Model::isGameSolve() {
+bool Model::isGameSolve(int checkedPlayer) {
     // Check rows and columns
     bool isRowValid;
     bool isColumnValid;
     for (int i = 0; i < 5; i++) {
         isColumnValid = true;
         isRowValid = true;
-        for (int j = 1; j < 5; j++) {
-            isRowValid = (isRowValid && board[i][j] != 0 && board[i][j] == board[i][0]);
-            isColumnValid = (isColumnValid && board[j][i] != 0 && board[j][i] == board[0][i]);
+        for (int j = 0; j < 5; j++) {
+            isRowValid = (isRowValid && board[i][j] != 0 && board[i][j] == checkedPlayer);
+            isColumnValid = (isColumnValid && board[j][i] != 0 && board[j][i] == checkedPlayer);
         }
         if (isRowValid || isColumnValid) return true;
     }
@@ -95,16 +100,12 @@ bool Model::isGameSolve() {
     bool isMainDiagonalValid = true;
     bool isInverseDiagonalValid = true;
     for (int i = 1; i < 5; i++) {
-        isMainDiagonalValid = (isMainDiagonalValid && board[i][i] != 0 && board[i][i] == board[0][0]);
-        isInverseDiagonalValid = (isInverseDiagonalValid && board[i][4 - i] != 0 && board[i][4 - i] == board[0][4]);
+        isMainDiagonalValid = (isMainDiagonalValid && board[i][i] != 0 && board[i][i] == checkedPlayer);
+        isInverseDiagonalValid = (isInverseDiagonalValid && board[i][4 - i] != 0 && board[i][4 - i] == checkedPlayer);
     }
     if (isMainDiagonalValid || isInverseDiagonalValid) return true;
 
     return false;
-}
-
-bool Model::isPieceValide(int x, int y) {
-    return (board[x][y] == currentPlayer || board[x][y] == 0);
 }
 
 bool Model::isDeplacementValide(int x, int y) {
@@ -125,20 +126,32 @@ bool Model::isDeplacementValide(int x, int y) {
     return false;
 }
 
-std::vector<std::vector<int>> Model::click(int x, int y) {
-    if (selectedPieceX != -1) {
-        if (isDeplacementValide(x, y)) {
-            unsetDeplacementValide();
-            board[selectedPieceX][selectedPieceY] = currentPlayer;
-            deplacementPiece(x, y);
-            unsetSelectedPiece();
-            switchPlayer();
-        }
-    } else {
-        if (isPieceValide(x, y)) {
-            setSelectedPiece(x, y);
-            setDeplacementValide(x, y);
+void Model::changeState(std::unique_ptr<GameState> newState) {
+    currentState = std::move(newState);
+}
+
+void Model::click(int x, int y) {
+    if (currentState) {
+        currentState->play(*this, x, y);
+        if (currentState->getState() == 1) {
+            if (isGameSolve(1)) {
+                changeState(std::make_unique<EndGamePlayer1State>());
+            } else if (isGameSolve(2)) {
+                changeState(std::make_unique<EndGamePlayer2State>());
+            }
+        } else if (currentState->getState() == 2) {
+            if (isGameSolve(2)) {
+                changeState(std::make_unique<EndGamePlayer2State>());
+            } else if (isGameSolve(1)) {
+                changeState(std::make_unique<EndGamePlayer1State>());
+            }
         }
     }
-    return board;
+}
+
+void Model::resetGame() {
+    board = std::vector<std::vector<int>>(5, std::vector<int>(5, 0));
+    currentState = std::make_unique<Player1SelectPieceState>();
+    selectedPieceX = -1;
+    selectedPieceY = -1;
 }

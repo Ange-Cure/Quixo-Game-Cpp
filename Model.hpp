@@ -1,39 +1,32 @@
 #pragma once
 #include <vector>
+#include <memory>
+#include "GameState.hpp"
 
 class Model {
 public:
     Model();
 
+    std::unique_ptr<GameState> currentState;
     std::vector<std::vector<int>> getBoard();
-
-    int getCurrentPlayer();
-
-    void switchPlayer();
-
+    std::vector<std::vector<int>>& getBoardRef();
+    int getSelectedPieceX();
+    int getSelectedPieceY();
+    GameState& getCurrentState();
     void switchPiece(int xA, int yA, int xB, int yB);
-
     void setSelectedPiece(int x, int y);
-
     void unsetSelectedPiece();
-
     void deplacementPiece(int x, int y);
-
     void setDeplacementValide(int x, int y);
-
     void unsetDeplacementValide();
-
-    bool isGameSolve();
-
-    bool isPieceValide(int x, int y);
-
+    bool isGameSolve(int);
     bool isDeplacementValide(int x, int y);
-
-    std::vector<std::vector<int>> click(int, int);
+    void changeState(std::unique_ptr<GameState> newState);
+    void click(int, int);
+    void resetGame();
 
 private:
     std::vector<std::vector<int>> board;
-    int currentPlayer;
     int selectedPieceX;
     int selectedPieceY;
 };
