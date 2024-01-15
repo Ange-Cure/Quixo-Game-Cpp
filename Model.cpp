@@ -5,10 +5,23 @@
 #include <iostream>
 
 
-Model::Model() : currentState(std::make_unique<Player1SelectPieceState>()), strategyMinMax(new MinMax()), strategyRandom(new Random()), currentStrategy(strategyRandom) {
+Model::Model() {
+    currentState = std::make_unique<Player1SelectPieceState>();
+    strategyMinMax = new MinMax();
+    strategyRandom = new Random();
+    currentStrategy = strategyMinMax;
     board = std::vector<std::vector<int>>(5, std::vector<int>(5, 0));
     selectedPieceX = -1;
     selectedPieceY = -1;
+}
+
+Model::Model(const Model& other) {
+    this->strategyMinMax = other.strategyMinMax;
+    this->strategyRandom = other.strategyRandom;
+    this->currentStrategy = other.currentStrategy;
+    this->board = other.board;
+    this->selectedPieceX = other.selectedPieceX;
+    this->selectedPieceY = other.selectedPieceY;
 }
 
 std::vector<std::vector<int>> Model::getBoard() {

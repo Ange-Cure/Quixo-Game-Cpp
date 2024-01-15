@@ -4,15 +4,16 @@
 #include "ViewChooseAI.hpp"
 
 Controller::Controller() {
+    model = new Model();
     window = new sf::RenderWindow(sf::VideoMode(650, 850), "Quixo", sf::Style::Titlebar | sf::Style::Close);
 }
 
 std::unique_ptr<GameState>& Controller::getCurrentState() {
-    return model.currentState;
+    return model->currentState;
 }
 
 std::vector<std::vector<int>> Controller::getBoard() {
-    return model.getBoard();
+    return model->getBoard();
 }
 
 void Controller::run() {
@@ -36,23 +37,23 @@ void Controller::changeViewChooseAI() {
 }
 
 void Controller::click(int x, int y) {
-    model.click(x, y);
+    model->click(x, y);
 }
 
 void Controller::resetGame() {
-    model.resetGame();
+    model->resetGame();
 }
 
 void Controller::setStrategyMinMax() {
-    model.setStrategyMinMax();
+    model->setStrategyMinMax();
 }
 
 void Controller::setStrategyRandom() {
-    model.setStrategyRandom();
+    model->setStrategyRandom();
 }
 
 void Controller::executeAI() {
-    model.executeAI();
+    model->executeAI();
 }
 
 

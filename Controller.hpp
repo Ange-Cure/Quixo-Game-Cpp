@@ -5,7 +5,7 @@
 class Controller
 {
 private:
-    Model model;
+    Model* model;
     sf::RenderWindow* window;
 
 public:

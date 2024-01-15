@@ -9,6 +9,7 @@
 class Model {
 public:
     Model();
+    Model(const Model&);
 
     std::unique_ptr<GameState> currentState;
     std::vector<std::vector<int>> getBoard();

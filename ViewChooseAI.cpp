@@ -4,7 +4,7 @@
 ViewChooseAI::ViewChooseAI(Controller* c) : controller(c) {
 
     textureRandom.loadFromFile("./sprite/random.png");
-    textureMinMax.loadFromFile("./sprite/minMaxIncoming.png");
+    textureMinMax.loadFromFile("./sprite/minMax.png");
     textureBack.loadFromFile("./sprite/back.png");
 
     spriteRandom.setTexture(textureRandom);
