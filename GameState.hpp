@@ -1,6 +1,6 @@
 #pragma once
 
-class Model;  // Déclaration anticipée de la classe Model
+class Model;
 
 class GameState {
 public:

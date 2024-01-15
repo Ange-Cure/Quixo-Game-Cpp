@@ -2,9 +2,10 @@
 #include "Player1SelectPieceState.hpp"
 #include "EndGamePlayer1State.hpp"
 #include "EndGamePlayer2State.hpp"
+#include <iostream>
 
 
-Model::Model() : currentState(std::make_unique<Player1SelectPieceState>()) {
+Model::Model() : currentState(std::make_unique<Player1SelectPieceState>()), strategyMinMax(new MinMax()), strategyRandom(new Random()), currentStrategy(strategyRandom) {
     board = std::vector<std::vector<int>>(5, std::vector<int>(5, 0));
     selectedPieceX = -1;
     selectedPieceY = -1;
@@ -28,6 +29,18 @@ int Model::getSelectedPieceY() {
 
 GameState& Model::getCurrentState() {
     return *currentState;
+}
+
+void Model::setStrategyMinMax() {
+    currentStrategy = strategyMinMax;
+}
+
+void Model::setStrategyRandom() {
+    currentStrategy = strategyRandom;
+}
+
+void Model::executeAI() {
+    currentStrategy->execute(*this);
 }
 
 void Model::switchPiece(int xA, int yA, int xB, int yB) {

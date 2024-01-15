@@ -18,5 +18,5 @@ private:
 
 public:
     ViewMainMenu(Controller*);
-    void display(std::vector<std::vector<int>>, std::unique_ptr<GameState>&, sf::RenderWindow* window);
+    void display(sf::RenderWindow* window);
 };

@@ -2,7 +2,7 @@
 #include "Controller.hpp"
 #include <iostream>
 
-View::View(Controller* c) : controller(c) {
+View::View(Controller* c, bool isAIPlaying) : controller(c), isAIPlaying(isAIPlaying) {
     textureEmpty.loadFromFile("./sprite/empty.png");
     textureRond.loadFromFile("./sprite/rond.png");
     textureCroix.loadFromFile("./sprite/croix.png");
@@ -40,8 +40,11 @@ void View::display(sf::RenderWindow* window) {
                 int y = (positionSourisOnClick.y - y_offset) / spriteSize;
                 if ((x == 0 || y == 0 || x == 4 || y == 4) && 0 <= x && x <= 4 && 0 <= y && y <= 4) {
                     controller->click(x, y);
+                    if (currentState->getState() == 2 && isAIPlaying) {
+                        controller->executeAI();
+                    }
                 }
-                if (775 <= positionSourisOnClick.y && positionSourisOnClick.y <= 840 && 10 <= positionSourisOnClick.x && positionSourisOnClick.x <= 225) {
+                if (10 <= positionSourisOnClick.x && positionSourisOnClick.x <= 225 && 775 <= positionSourisOnClick.y && positionSourisOnClick.y <= 840) {
                     controller->resetGame();
                     return;
                 }

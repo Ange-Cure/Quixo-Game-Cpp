@@ -6,6 +6,7 @@ class View
 {
 private:
     Controller* controller;
+    bool isAIPlaying;
 
     int spriteSize = 120;
     int x_offset = 25;
@@ -38,7 +39,7 @@ private:
     sf::Sprite spritePlayAgain;
 
 public:
-    View(Controller*);
+    View(Controller*, bool);
     void display(sf::RenderWindow* window);
 };
 

@@ -15,7 +15,7 @@ ViewMainMenu::ViewMainMenu(Controller* c) : controller(c) {
 
 
 
-void ViewMainMenu::display(std::vector<std::vector<int>> board, std::unique_ptr<GameState>& currentState, sf::RenderWindow* window) {
+void ViewMainMenu::display(sf::RenderWindow* window) {
     while (window->isOpen()) {
         sf::Event event;
         while (window->pollEvent(event)) {

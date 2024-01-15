@@ -2,6 +2,9 @@
 #include <vector>
 #include <memory>
 #include "GameState.hpp"
+#include "AIStrategy.hpp"
+#include "MinMax.hpp"
+#include "Random.hpp"
 
 class Model {
 public:
@@ -24,9 +27,15 @@ public:
     void changeState(std::unique_ptr<GameState> newState);
     void click(int, int);
     void resetGame();
+    void setStrategyMinMax();
+    void setStrategyRandom();
+    void executeAI();
 
 private:
     std::vector<std::vector<int>> board;
     int selectedPieceX;
     int selectedPieceY;
+    MinMax* strategyMinMax;
+    Random* strategyRandom;
+    AIStrategy* currentStrategy;
 };

@@ -2,9 +2,6 @@
 #include "Model.hpp"
 #include <SFML/Graphics.hpp>
 
-class View;
-class ViewMainMenu;
-
 class Controller
 {
 private:
@@ -21,5 +18,8 @@ public:
     void changeViewChooseAI();
     void click(int, int);
     void resetGame();
+    void setStrategyMinMax();
+    void setStrategyRandom();
+    void executeAI();
 };
 
