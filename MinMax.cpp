@@ -8,8 +8,8 @@
 int MinMax::evaluate(Model& model) {
     std::vector<std::vector<int>> board = model.getBoard();
     int value = 0;
-    if (model.isGameSolve(1)) return 2147483647;
-    if (model.isGameSolve(2)) return -2147483647;
+    if (model.isGameSolve(1)) return -2147483647;
+    if (model.isGameSolve(2)) return 2147483647;
     for (int i = 0; i < 5; i++) {
         for (int j = 0; j < 4; j++) {
             if (board[i][j] != 0 && board[i][j] == board[i][j+1]) {
@@ -50,10 +50,10 @@ int MinMax::evaluate(Model& model) {
 
 std::vector<int> MinMax::runMinMax(Model& model, int depth) {
     std::vector<int> best = std::vector<int>(5, 0);
-    if (depth%2 == 1) {
+    if (model.currentState->getState() == 2) {
         best[0] = -2147483647;
     }
-    if (depth%2 == 0) {
+    if (model.currentState->getState() == 1) {
         best[0] = 2147483647;
     }
     if (depth == 0) {
@@ -66,7 +66,7 @@ std::vector<int> MinMax::runMinMax(Model& model, int depth) {
 
     for (int i = 0; i < 5; i++) {
         for (int j = 0; j < 5; j++) {
-            if ((i == 0 || i == 4 || j == 0 || j == 4) && (model.getBoard()[i][j] == depth % 2 + 1 || model.getBoard()[i][j] == 0)) {
+            if ((i == 0 || i == 4 || j == 0 || j == 4) && (model.getBoard()[i][j] == model.currentState->getState() || model.getBoard()[i][j] == 0)) {
                 if (j != 0) {
                     possibleMove.push_back({i, j, i, 0});
                 }
@@ -117,7 +117,6 @@ std::vector<int> MinMax::runMinMax(Model& model, int depth) {
 
 void MinMax::execute(Model& model) {
     std::vector result = runMinMax(model, 3);
-
     model.click(result[1], result[2]);
     model.click(result[3], result[4]);
 }
