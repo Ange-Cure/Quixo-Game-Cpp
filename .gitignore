@@ -1,2 +1,4 @@
 Quixo
-main.o
+*.o
+.vscode
+a.out
